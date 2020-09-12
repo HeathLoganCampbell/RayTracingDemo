@@ -4,13 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Main {
-    public static final int HEIGHT = 90;
-    public static final int WIDTH = 160;
-    public static final int SCALE = 8;
+    public static final int WIDTH = 80;
+    public static final int HEIGHT = 45;
+    public static final int SCALE = 16;
 
     public static void main(String[] args) {
         JFrame jFrame = new JFrame("RAYCAST");
-        Game comp = new Game(WIDTH * SCALE, HEIGHT * SCALE);
+        Game comp = new Game(WIDTH, HEIGHT);
         jFrame.add(comp);
         jFrame.pack();
 
