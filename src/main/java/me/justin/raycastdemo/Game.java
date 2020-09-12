@@ -2,6 +2,7 @@ package me.justin.raycastdemo;
 
 import com.sun.org.apache.xalan.internal.xsltc.util.IntegerArray;
 import me.justin.raycastdemo.inputs.InputListener;
+import me.justin.raycastdemo.levels.Level;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -16,6 +17,7 @@ public class Game extends Canvas implements Runnable
     private int[] pixels;
     private InputListener inputListener = new InputListener();
     private int width, height;
+    private Level level;
 
     private int x = Main.WIDTH / 2;
     private int y = Main.HEIGHT / 2;
@@ -30,6 +32,8 @@ public class Game extends Canvas implements Runnable
         this.addKeyListener(inputListener);
         this.addFocusListener(inputListener);
 
+        this.level = new Level();
+
     }
 
     public void render() {
@@ -42,6 +46,8 @@ public class Game extends Canvas implements Runnable
         this.requestFocus();
 
         Arrays.fill(this.pixels, 0x000000);
+
+        this.level.render(this.pixels);
 
         this.pixels[x + y * this.width] = 0xFFFFFF;
 
@@ -68,19 +74,27 @@ public class Game extends Canvas implements Runnable
 
     private void tick() {
         if (this.inputListener.isPressed(KeyEvent.VK_W)) {
-            this.y--;
+            if (!this.level.collide(this.x, this.y-1)) {
+                this.y--;
+            }
         }
 
         if (this.inputListener.isPressed(KeyEvent.VK_S)) {
-            this.y++;
+            if (!this.level.collide(this.x, this.y+1)) {
+                this.y++;
+            }
         }
 
         if (this.inputListener.isPressed(KeyEvent.VK_A)) {
-            this.x--;
+            if (!this.level.collide(this.x-1, this.y)) {
+                this.x--;
+            }
         }
 
         if (this.inputListener.isPressed(KeyEvent.VK_D)) {
-            this.x++;
+            if (!this.level.collide(this.x+1, this.y)) {
+                this.x++;
+            }
         }
     }
 }
