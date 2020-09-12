@@ -21,6 +21,7 @@ public class Game extends Canvas implements Runnable
 
     private int x = Main.WIDTH / 2;
     private int y = Main.HEIGHT / 2;
+    private int angle = 0;
 
     public Game(int width, int height) {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -51,6 +52,12 @@ public class Game extends Canvas implements Runnable
 
         this.pixels[x + y * this.width] = 0xFFFFFF;
 
+        for (int i = 2; i < 5; i++) {
+            int xOffset = (int) (Math.cos(this.angle / Math.PI * 0.5) * i);
+            int yOffset = (int) (Math.sin(this.angle / Math.PI * 0.5) * i);
+            this.pixels[(x + xOffset) + (y + yOffset) * this.width] = 0x00FF00;
+        }
+
         Graphics g = bs.getDrawGraphics();
         g.fillRect(0, 0, getWidth(), getHeight());
         g.drawImage(this.image, 0, 0, Main.WIDTH * Main.SCALE, Main.HEIGHT * Main.SCALE, null);
@@ -73,28 +80,37 @@ public class Game extends Canvas implements Runnable
     }
 
     private void tick() {
+        int xOffset = 0;
+        int yOffset = 0;
+//        for (int i = 0; i < 5; i++) {
+        xOffset = (int) Math.ceil(Math.cos(this.angle / Math.PI * 0.5) * 4);
+        yOffset = (int) Math.ceil(Math.sin(this.angle / Math.PI * 0.5) * 4);
+//            if(!(yOffset == 0 && xOffset == 0))
+//                break;
+//        }
+
+        System.out.println("Offsets: " + xOffset + ", " + yOffset);
+
         if (this.inputListener.isPressed(KeyEvent.VK_W)) {
-            if (!this.level.collide(this.x, this.y-1)) {
-                this.y--;
+            if (!this.level.collide(this.x+xOffset, this.y+yOffset)) {
+                this.y += yOffset;
+                this.x += xOffset;
             }
         }
 
         if (this.inputListener.isPressed(KeyEvent.VK_S)) {
-            if (!this.level.collide(this.x, this.y+1)) {
-                this.y++;
+            if (!this.level.collide(this.x - xOffset, this.y - yOffset)) {
+                this.y -= yOffset;
+                this.x -= xOffset;
             }
         }
 
         if (this.inputListener.isPressed(KeyEvent.VK_A)) {
-            if (!this.level.collide(this.x-1, this.y)) {
-                this.x--;
-            }
+            this.angle--;
         }
 
         if (this.inputListener.isPressed(KeyEvent.VK_D)) {
-            if (!this.level.collide(this.x+1, this.y)) {
-                this.x++;
-            }
+            this.angle++;
         }
     }
 }

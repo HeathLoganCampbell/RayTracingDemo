@@ -15,3 +15,7 @@ Added keyboard controls and update to movement accordingly.
 ### Ver 0.3
 Added first level and collision detection.
 ![v0.3](readme-resources/v0.3-Screenshot.png)
+
+### Ver 0.4
+Added direction heading and direction controlled movement.
+![v0.4](readme-resources/v0.4-Screenshot.png)
