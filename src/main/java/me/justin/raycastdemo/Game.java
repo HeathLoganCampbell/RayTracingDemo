@@ -21,7 +21,8 @@ public class Game extends Canvas implements Runnable
 
     private int x = Main.WIDTH / 2;
     private int y = Main.HEIGHT / 2;
-    private int angle = 0;
+    private int veleX, veleY;
+    private double angle = 0;
 
     public Game(int width, int height) {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -53,9 +54,7 @@ public class Game extends Canvas implements Runnable
         this.pixels[x + y * this.width] = 0xFFFFFF;
 
         for (int i = 2; i < 5; i++) {
-            int xOffset = (int) (Math.cos(this.angle / Math.PI * 0.5) * i);
-            int yOffset = (int) (Math.sin(this.angle / Math.PI * 0.5) * i);
-            this.pixels[(x + xOffset) + (y + yOffset) * this.width] = 0x00FF00;
+            this.pixels[(x + veleX * i) + (y + veleY * i) * this.width] = 0x00FF00;
         }
 
         Graphics g = bs.getDrawGraphics();
@@ -80,37 +79,47 @@ public class Game extends Canvas implements Runnable
     }
 
     private void tick() {
-        int xOffset = 0;
-        int yOffset = 0;
-//        for (int i = 0; i < 5; i++) {
-        xOffset = (int) Math.ceil(Math.cos(this.angle / Math.PI * 0.5) * 4);
-        yOffset = (int) Math.ceil(Math.sin(this.angle / Math.PI * 0.5) * 4);
-//            if(!(yOffset == 0 && xOffset == 0))
-//                break;
-//        }
+//        int xOffset = 0;
+//        int yOffset = 0;
+////        for (int i = 0; i < 5; i++) {
+//        xOffset = (int) Math.ceil(Math.cos(this.angle / Math.PI * 0.5) * 4);
+//        yOffset = (int) Math.ceil(Math.sin(this.angle / Math.PI * 0.5) * 4);
+////            if(!(yOffset == 0 && xOffset == 0))
+////                break;
+////        }
 
-        System.out.println("Offsets: " + xOffset + ", " + yOffset);
+//        System.out.println("Offsets: " + xOffset + ", " + yOffset);
 
         if (this.inputListener.isPressed(KeyEvent.VK_W)) {
-            if (!this.level.collide(this.x+xOffset, this.y+yOffset)) {
-                this.y += yOffset;
-                this.x += xOffset;
+            if (!this.level.collide(this.x + this.veleX, this.y + this.veleY)) {
+                this.y += this.veleY;
+                this.x += this.veleX;
             }
         }
 
         if (this.inputListener.isPressed(KeyEvent.VK_S)) {
-            if (!this.level.collide(this.x - xOffset, this.y - yOffset)) {
-                this.y -= yOffset;
-                this.x -= xOffset;
+            if (!this.level.collide(this.x - this.veleX, this.y - this.veleY)) {
+                this.y -= this.veleY;
+                this.x -= this.veleX;
             }
         }
 
+        int speed = 2;
+
         if (this.inputListener.isPressed(KeyEvent.VK_A)) {
-            this.angle--;
+            this.angle -= 0.1;
+            if(this.angle < 0)
+                this.angle = 2 * Math.PI;
+            this.veleX = (int) (Math.cos(this.angle) * speed);
+            this.veleY = (int) (Math.sin(this.angle) * speed);
         }
 
         if (this.inputListener.isPressed(KeyEvent.VK_D)) {
-            this.angle++;
+            this.angle += 0.1;
+            if(this.angle > 2 * Math.PI)
+                this.angle = 0;
+            this.veleX = (int) (Math.cos(this.angle) * speed);
+            this.veleY = (int) (Math.sin(this.angle) * speed);
         }
     }
 }
